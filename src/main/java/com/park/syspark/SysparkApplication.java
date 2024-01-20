@@ -1,4 +1,4 @@
-package com.thiago.syspark;
+package com.park.syspark;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
