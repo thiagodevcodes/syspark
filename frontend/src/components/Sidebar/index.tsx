@@ -5,11 +5,10 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 
 interface MobileButtonProps {
-    setActive?: React.Dispatch<React.SetStateAction<boolean>>;
     active?: boolean;
 }
 
-export default function Aside({ setActive, active}: MobileButtonProps): ReactElement {
+export default function Aside({ active }: MobileButtonProps): ReactElement {
     const router = useRouter();
 
     return (

@@ -38,7 +38,7 @@ export default function Layout({ children }: LayoutProps): ReactElement {
             { width > 800 && <Aside/> }
 
             <main className={styles.main}>
-                { width < 800 && <Aside setActive={setActive} active={active}/> }
+                { width < 800 && <Aside active={active}/> }
                 { children }
             </main>
 
