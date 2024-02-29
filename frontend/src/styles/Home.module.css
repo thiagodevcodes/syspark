@@ -76,16 +76,24 @@
 }
 
 .green {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: green;
     width: 40px;
     height: 40px;
     border-radius: 10px;
+    color: white;
 }
 
 .red {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: red;
     width: 40px;
     height: 40px;
     border-radius: 10px;
+    color: white;
 }
 

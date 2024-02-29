@@ -65,17 +65,16 @@ export default function Home(): ReactElement {
               <div className={styles.vagasContainer}>
                 <h2>Vagas</h2>
                 <div className={styles.vagas}>
-                  <div className={styles.green}></div>
-                  <div className={styles.red}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
-                  <div className={styles.green}></div>
+                  <div className={styles.green}>1</div>
+                  <div className={styles.red}>2</div>
+                  <div className={styles.green}>3</div>
+                  <div className={styles.green}>4</div>
+                  <div className={styles.green}>5</div>
+                  <div className={styles.green}>6</div>
+                  <div className={styles.green}>7</div>
+                  <div className={styles.green}>8</div>
+                  <div className={styles.green}>9</div>
+                  <div className={styles.green}>10</div>
                 </div>
               </div>
             </div>
