@@ -1,7 +1,8 @@
 import styles from "./sidebar.module.css"
-import { ReactElement } from "react" 
+import { ReactElement, useState } from "react" 
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/router"
 
 interface MobileButtonProps {
     setActive?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,16 +10,18 @@ interface MobileButtonProps {
 }
 
 export default function Aside({ setActive, active}: MobileButtonProps): ReactElement {
+    const router = useRouter();
+
     return (
         <aside className={`${styles.aside} ${active ? `${styles.open}` : ""}`} >
             <ul>
-                <li>
+                <li className={router.pathname === "/home" ? `${styles.active}` : ""} >
                     <Image src={"/icons/Home.svg"} width={25} height={25} alt="Logo Home"></Image>
                     <Link href={"/home"}>Home</Link>
                 </li>
-                <li>
+                <li className={router.pathname === "/mensalistas" ? `${styles.active}` : ""}>
                     <Image src={"/icons/Calendar.svg"} width={25} height={25} alt="Logo Home"></Image>
-                    <Link href={"#"}>Mensalistas</Link>
+                    <Link href={"/mensalistas"}>Mensalistas</Link>
                 </li>
                 <li>
                     <Image src={"/icons/Movement.svg"} width={25} height={25} alt="Logo Home"></Image>

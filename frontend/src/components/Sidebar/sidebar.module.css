@@ -2,7 +2,6 @@
     grid-area: aside;
     background-color: #CECECE;
     color: #fff;
-    padding: 10px;
     height: 100%;
     position: fixed;
     top: 60px;
@@ -12,13 +11,18 @@
 .aside a {
     color: black;
     text-decoration: none;   
+    padding: 8px;
+}
+
+.active {
+    background-color: rgb(180, 180, 180)
 }
 
 .aside li {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 15px;
+
     list-style-type: none;
     font-weight: bold;
 }
