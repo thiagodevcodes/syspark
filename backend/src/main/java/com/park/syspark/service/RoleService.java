@@ -59,6 +59,8 @@ public class RoleService {
             roleModel.setUpdatedAt(date);
             roleModel.setIsActive(true);
             roleModel.setVersion(1);
+            System.out.println("+++++++++++++++++++++++=" + roleForm );
+            System.out.println("+++++++++++++++++++++++=" + roleModel );
             roleRepository.save(roleModel);
             return convertModelToDto(roleModel);
         } catch (DataIntegrityViolationException err) {
