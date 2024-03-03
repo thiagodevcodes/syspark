@@ -39,7 +39,7 @@ public class UserModel {
 
     @ManyToMany
     @JoinTable(
-            name="TB_USER_ROLES",
+            name="TB_USER_ROLE",
             joinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")},
             inverseJoinColumns = @JoinColumn(name = "id_role")
     )

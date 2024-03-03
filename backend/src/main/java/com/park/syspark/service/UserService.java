@@ -6,15 +6,19 @@ import com.park.syspark.model.UserModel;
 import com.park.syspark.repository.UserRepository;
 import com.park.syspark.rest.dto.RoleDto;
 import com.park.syspark.rest.dto.UserDto;
+import com.park.syspark.rest.form.RoleForm;
 import com.park.syspark.rest.form.UserLoginForm;
 import com.park.syspark.rest.form.UserUpdateForm;
+import com.park.syspark.service.exceptions.user.InvalidCredentials;
 import com.park.syspark.service.exceptions.user.UserInsertException;
 import com.park.syspark.service.exceptions.user.UserNotFoundException;
 import com.park.syspark.service.exceptions.user.UserUpdateException;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,15 +35,23 @@ public class UserService {
     }
 
     public UserDto getUserDtoByDescription(String description) {
-        UserModel userModel = findUserModelByDescription(description);
+        UserModel userModel = findUserModelByEmail(description);
         return convertModelToDto(userModel);
     }
 
-    public UserModel findUserModelByDescription(String description) {
-        return userRepository.findByEmailAndIsActiveTrue(description)
+    public UserModel findUserModelByEmail(String email) {
+         UserModel userModel = userRepository.findByEmailAndIsActiveTrue(email)
                 .orElseThrow(() -> new UserNotFoundException(
-                        String.format("The user ‘%s’ was not found", description)
+                        String.format("The user ‘%s’ was not found", email)
                 ));
+        List<Object[]> results = userRepository.findUserRolesByEmail(email);
+        for (Object[] result : results) {
+            String roleDescription = (String) result[1];
+            RoleModel roleModel = new RoleModel();
+            roleModel.setDescription(roleDescription);
+            userModel.getRoles().add(roleModel);
+        }
+        return userModel;
     }
 
     public List<UserDto> getAllUserDto() {
@@ -47,7 +59,32 @@ public class UserService {
         if (userModelList.isEmpty()) {
             throw new UserNotFoundException("No active user was found");
         }
+        for (UserModel userModel : userModelList) {
+            List<Object[]> results = userRepository.findUserRolesByEmail(userModel.getEmail());
+            for (Object[] result : results) {
+                String methodDescription = (String) result[1];
+                RoleModel roleModel = new RoleModel();
+                roleModel.setDescription(methodDescription);
+                userModel.getRoles().add(roleModel);
+            }
+        }
         return convertModelListToDtoList(userModelList);
+    }
+
+    public UserDto login(UserLoginForm userLoginForm) {
+        try {
+            userRepository.findByEmail(userLoginForm.getEmail()).orElseThrow(
+                    () -> new InvalidCredentials("Invalid login credentials")
+            );
+            UserModel userModel = findUserModelByEmail(userLoginForm.getEmail());
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            if (!(passwordEncoder.matches(userLoginForm.getPassword(), userModel.getPassword()))) {
+                throw new InvalidCredentials("Invalid login credentials");
+            }
+            return convertModelToDto(userModel);
+        } catch (InvalidCredentials err) {
+            throw new InvalidCredentials("Invalid login credentials");
+        }
     }
 
     @Transactional
@@ -57,7 +94,7 @@ public class UserService {
                     String.format("The user ‘%s’ is already registered", userForm.getEmail())
             );
         }
-        RoleModel roleModel = roleService.findRoleModelByDescription("Administrador");
+        RoleModel roleModel = roleService.findRoleModelByDescription("Administrator");
         Set<RoleModel> roles = new HashSet<>();
         roles.add(roleModel);
         try {
@@ -76,27 +113,37 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto updateUser(String description, UserUpdateForm userUpdateForm) {
+    public UserDto updateUser(String email, UserUpdateForm userUpdateForm) {
         try {
-            UserModel userModel = findUserModelByDescription(description);
+            UserModel userModel = findUserModelByEmail(email);
+            userRepository.deleteUserRolesByEmail(email);
+            userModel.getRoles().clear();
+            userRepository.save(userModel);
             userModel.setEmail(userUpdateForm.getEmail());
             userModel.setUpdatedAt(new Date());
+            Set<RoleModel> roleModels = new HashSet<>();
+            for (RoleForm roleForm : userUpdateForm.getRoles()) {
+                RoleModel roleModel = roleService.findRoleModelByDescription(roleForm.getDescription());
+                roleModels.add(roleModel);
+            }
+            userModel.setRoles(roleModels);
             userRepository.save(userModel);
             return convertModelToDto(userModel);
         } catch (DataIntegrityViolationException err) {
-            throw new UserUpdateException(String.format("Failed to update the user ‘%s’. Check if the data is correct", description));
+            throw new UserUpdateException(String.format("Failed to update the user ‘%s’. Check if the data is correct", email));
         }
     }
 
     @Transactional
-    public void deleteUser(String description) {
+    public void deleteUser(String email) {
         try {
-            UserModel userModel = findUserModelByDescription(description);
+            UserModel userModel = findUserModelByEmail(email);
+            userModel.getRoles().clear();
             userModel.setIsActive(false);
             userModel.setUpdatedAt(new Date());
             userRepository.save(userModel);
         } catch (DataIntegrityViolationException err) {
-            throw new UserUpdateException(String.format("Failed to update the user ‘%s’. Check if the data is correct", description));
+            throw new UserUpdateException(String.format("Failed to update the user ‘%s’. Check if the data is correct", email));
         }
     }
 
@@ -122,7 +169,7 @@ public class UserService {
     private UserModel convertFormToModel(UserLoginForm userForm) {
         UserModel userModel = new UserModel();
         userModel.setEmail(userForm.getEmail());
-        userModel.setPassword(userForm.getPassword());
+        userModel.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
         return userModel;
     }
 }

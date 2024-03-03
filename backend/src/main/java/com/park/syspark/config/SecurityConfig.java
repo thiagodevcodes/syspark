@@ -17,15 +17,16 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/roles/**")).permitAll()
+                                 .requestMatchers(new AntPathRequestMatcher("/roles/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
                                 .anyRequest().authenticated()
 
                 )
-                .httpBasic();
-
+                .httpBasic()
+                .and()
+                .headers().frameOptions().disable();
         return http.build();
     }
-
 }
 
 //https://docs.spring.io/spring-security/reference/servlet/configuration/java.html

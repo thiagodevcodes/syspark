@@ -25,11 +25,19 @@ public class UserController {
         return ResponseEntity.ok().body(userDtoList);
     }
 
-    @GetMapping("/{description}")
-    public ResponseEntity<UserDto> getUserById(
-            @PathVariable("description") String description
+    @GetMapping("/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(
+            @PathVariable("email") String email
     ) {
-        UserDto userDto = userService.getUserDtoByDescription(description);
+        UserDto userDto = userService.getUserDtoByDescription(email);
+        return ResponseEntity.ok().body(userDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> userLogin(
+            @Valid @RequestBody UserLoginForm userForm
+    ) {
+        UserDto userDto = userService.login(userForm);
         return ResponseEntity.ok().body(userDto);
     }
 
@@ -41,20 +49,20 @@ public class UserController {
         return ResponseEntity.ok().body(userDto);
     }
 
-    @PutMapping("/{description}")
+    @PutMapping("/{email}")
     public ResponseEntity<UserDto> updateUser(
-            @PathVariable("description") String description,
+            @PathVariable("email") String email,
             @Valid @RequestBody UserUpdateForm userUpdateForm
     ) {
-        UserDto userDto = userService.updateUser(description, userUpdateForm);
+        UserDto userDto = userService.updateUser(email, userUpdateForm);
         return ResponseEntity.ok().body(userDto);
     }
 
-    @DeleteMapping("/{description}")
+    @DeleteMapping("/{email}")
     public ResponseEntity<UserDto> deleteUser(
-            @PathVariable("description") String description
+            @PathVariable("email") String email
     ) {
-        userService.deleteUser(description);
+        userService.deleteUser(email);
         return ResponseEntity.noContent().build();
     }
 }

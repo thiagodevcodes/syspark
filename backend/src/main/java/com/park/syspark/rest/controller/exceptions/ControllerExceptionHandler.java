@@ -3,6 +3,7 @@ package com.park.syspark.rest.controller.exceptions;
 import com.park.syspark.service.exceptions.role.RoleInsertException;
 import com.park.syspark.service.exceptions.role.RoleNotFoundException;
 import com.park.syspark.service.exceptions.role.RoleUpdateException;
+import com.park.syspark.service.exceptions.user.InvalidCredentials;
 import com.park.syspark.service.exceptions.user.UserInsertException;
 import com.park.syspark.service.exceptions.user.UserNotFoundException;
 import com.park.syspark.service.exceptions.user.UserUpdateException;
@@ -100,5 +101,16 @@ public class ControllerExceptionHandler {
                 errorMsg,
                 request.getRequestURI());
         return new ResponseEntity<>(exceptionsDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCredentials.class)
+    public ResponseEntity<ExceptionsDto> handleInvalidCredentials(InvalidCredentials ex, HttpServletRequest request) {
+        ExceptionsDto exceptionsDto = new ExceptionsDto(
+                System.currentTimeMillis(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                ex.getMessage(),
+                request.getRequestURI());
+        return new ResponseEntity<>(exceptionsDto, HttpStatus.UNAUTHORIZED);
     }
 }
