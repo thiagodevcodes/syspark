@@ -4,7 +4,7 @@
       "header header header"
       "aside main main"
       "aside footer footer";
-    grid-template-columns: 180px 1fr;
+    grid-template-columns: 200px 1fr;
     grid-template-rows: 60px 1fr;
 }
 
