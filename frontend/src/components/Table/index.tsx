@@ -26,9 +26,11 @@ export default function Table({  }) {
                         <td>Ativo</td>
                         <td>12</td>
                         <td>
-                            <button className={`${styles.bgYellow} ${styles.actionButton}`}><Image src={"/icons/Edit.svg"} width={30} height={30} alt="Icone Edit"></Image></button>
-                            <button className={`${styles.bgRed} ${styles.actionButton}`}><Image src={"/icons/Remove.svg"} width={30} height={30} alt="Icone Remove"></Image></button>
-                            <button className={`${styles.bgBlue} ${styles.actionButton}`}><Image src={"/icons/Cars.svg"} width={30} height={30} alt="Icone Cars"></Image></button>
+                            <div className={styles.buttonContainer}>
+                                <button className={`${styles.bgYellow} ${styles.actionButton}`}><Image src={"/icons/Edit.svg"} width={30} height={30} alt="Icone Edit"></Image></button>
+                                <button className={`${styles.bgRed} ${styles.actionButton}`}><Image src={"/icons/Remove.svg"} width={30} height={30} alt="Icone Remove"></Image></button>
+                                <button className={`${styles.bgBlue} ${styles.actionButton}`}><Image src={"/icons/Cars.svg"} width={30} height={30} alt="Icone Cars"></Image></button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

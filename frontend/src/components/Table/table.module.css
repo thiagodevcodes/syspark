@@ -1,8 +1,8 @@
 .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    overflow-y: auto;
+    align-items: center;
 }
 
 .table {
@@ -14,6 +14,7 @@
     border-radius: 10px;
     border-collapse: collapse;
     margin-bottom: 20px;
+    padding: 0 20px;
     width: 80%;
 }
 
@@ -22,7 +23,6 @@
     color: white;
     padding: 12px;
     text-align: center;
-   
 }
 
 .table th:nth-child(1) {
@@ -80,4 +80,15 @@
 
 .actionButton:hover {
     cursor: pointer;
+}
+
+.buttonContainer {
+    display: flex;
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        align-items: start;
+        padding: 0 30px;
+    }
 }
